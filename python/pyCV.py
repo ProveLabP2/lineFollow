@@ -19,7 +19,8 @@ def show_imgs(img_arr, cmap=None):
         ax[i].imshow(img, cmap=cmap)
 
 #fix TODO
-def line_image(image):
+def line_image(image, canny_threshold1=100, canny_threshold2=130,
+        hough_threshold=2, min_line_length=3, max_gap=5, rho=2.0, theta=.3):
     images = image
 
     #Read images, flip them vertically, and convert them to RGB color order
