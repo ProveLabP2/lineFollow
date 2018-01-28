@@ -2,6 +2,7 @@
 import cv2
 import matplotlib
 import pyCV
+import pyCV2
 import sys
 import configparser
 from matplotlib.pyplot import imshow
@@ -14,11 +15,11 @@ def main(argv):
     if len(argv) > 1:
         config = configparser.ConfigParser()
         config.read(argv[1])
-    cap = cv2.VideoCapture(0)
+    cap = cv2.VideoCapture('../images/GP015331.MP4')
     ret, frame = cap.read()
     fig = plt.figure()
     ax = fig.add_subplot(111)
-    im = ax.imshow(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB), animated=True)
+    im = ax.imshow(cv2.cvtColor(frame[:, :], cv2.COLOR_BGR2RGB), animated=True)
     def updatefig(*args):
         ret, frame = cap.read()
         if len(argv) == 1:
