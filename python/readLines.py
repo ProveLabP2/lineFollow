@@ -2,7 +2,6 @@
 import cv2
 import matplotlib
 import pyCV
-import pyCV2
 import sys
 import configparser
 from matplotlib.pyplot import imshow
