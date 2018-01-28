@@ -1,1 +1,1 @@
-quick and easy python code for intial testing on RasbPi
+Quick and easy python code for intial testing on RasbPi to use on our RC car.
