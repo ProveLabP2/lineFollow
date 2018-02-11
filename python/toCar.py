@@ -14,7 +14,7 @@ def main(argv):
         config = configparser.ConfigParser()
         config.read(argv[1])
     camera = PiCamera()
-    capture = PiRGBArray(camera, size = (640, 480))
+    rawCapture = PiRGBArray(camera, size = (1920, 1080))
     time.sleep(.1)
 
     #cap = cv2.VideoCapture('../images/GP015331.MP4')
