@@ -18,7 +18,7 @@ def main(argv):
     ret, frame = cap.read()
     fig = plt.figure()
     ax = fig.add_subplot(111)
-    im = ax.imshow(cv2.cvtColor(frame[:, :], cv2.COLOR_BGR2RGB), animated=True)
+    im = ax.imshow(cv2.cvtColor(frame[582:, :], cv2.COLOR_BGR2RGB), animated=True)
     def updatefig(*args):
         ret, frame = cap.read()
         if len(argv) == 1:
@@ -34,7 +34,9 @@ def main(argv):
                                     config['OPTIONS']['theta'])
         im.set_array(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
         return im
-    ani = animation.FuncAnimation(fig, updatefig, interval=1)
+    while(True):
+        updatefig()
+    #ani = animation.FuncAnimation(fig, updatefig, interval=1)
     plt.show()
 
 if __name__ == "__main__":

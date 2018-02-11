@@ -26,12 +26,12 @@ def calc_points(x1, y1, slope):
        return int(x1 - y1/slope) , 0
 
 #fix TODO
-def line_image(image, canny_threshold1=100, canny_threshold2=130,
+def line_image(image, canny_threshold1=0, canny_threshold2=0,
         hough_threshold=2, min_line_length=3, max_gap=5, rho=2.0, theta=.3):
 
     #Read images, flip them vertically, and convert them to RGB color order
     #img_all = np.array(cv2.cvtColor(cv2.imread(images), cv2.COLOR_BGR2RGB))
-    img = np.array(image[:, :])
+    img = np.array(image[582:, :])
     #print(img_all[:, :, :] > [100, 0, 0])
     #img_all = img_all[:, :] > [125, 125, 125]
     #img_all = img_all[:, :, :] - 100
@@ -51,79 +51,64 @@ def line_image(image, canny_threshold1=100, canny_threshold2=130,
     #find image dimensions
     hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
 
-    lower_yellow = np.array([0, 80, 80])
+    lower_yellow = np.array([0, 100, 100])
     upper_yellow = np.array([70, 255, 255])
     #upper_yellow = np.array([70, 100, 100])
 
     mask = cv2.inRange(hsv, lower_yellow, upper_yellow)
     res = cv2.bitwise_and(img, img, mask=mask)
-
-    print(res)
-    return res
-    gray_arr = np.array(cv2.cvtColor(img, cv2.COLOR_BGR2GRAY))
+    gray_arr = np.array(cv2.cvtColor(res, cv2.COLOR_BGR2GRAY))
 
     #blur images to avoid recognizing small lines
-    blur_arr = np.array(cv2.blur(gray_arr,(2,2)))
+    blur_arr = np.array(cv2.blur(gray_arr,(1,1)))
     #imshow(blur_arr[0])
     #return blur_arr[0]
     #blur_arr = gray_arr
     #use canny threshold to find edges of shapes
-    canny_threshold1 = 100
-    canny_threshold2 = 130
 
     canny_arr = np.array(cv2.Canny(blur_arr, canny_threshold1, canny_threshold2))
-    hough_threshold = 2
-    min_line_length = 3
-    max_gap = 5
-    rho = 2.0
-    theta = .3
 
+    #return cv2.cvtColor(canny_arr,cv2.COLOR_GRAY2RGB)
     line_arr = []
     line_coord_arr = []
     line_count = 0
     lines = cv2.HoughLinesP(canny_arr, rho, theta, hough_threshold,
         min_line_length, max_gap)
     if lines is not None:
-        #minX, minY, maxX, maxY = lines[0][0]
+        h = len(img)
+        w = len(img[0])
+        minX, minY, maxX, maxY = lines[0][0]
         lines = np.array(lines).reshape(-1, 4)
         #print(lines)
-        avg_slopes = np.mean((lines[:,3] - lines[:,1])/(lines[:,2] - lines[:,0]))
-        avgX1, avgY1, avgX2, avgY2 = np.mean(lines, axis=0)
-        avg2 = np.mean(lines[:,3] - lines[:, 1])/np.mean(lines[:,2] - lines[:, 0])
-        print("S1: ", np.mean(avg_slopes[not math.isinf(avg_slopes)]))
-        print("S2: ", avg2)
-        print([avgX1, avgY1, avgX2, avgY2]) 
-        avg_slope = (avgY2 - avgY1)/(avgX2 - avgX1)
-
         for line in lines:
             x1, y1, x2, y2 = line
-            #if y1 < minY:
-            #    minY = y1
-            #    minX = x1
-            #if y2 < minY:
-            #    minY = y2
-            #    minX = x2
-            #if y1 > maxY:
-            #    maxY = y1
-            #    maxX = x1
-            #if y2 > maxY:
-            #    maxY = y2
-            #    maxX = x2
-            line_coord = np.array([[[x1, y1], [x2, y2]]], dtype=float)
-            cv2.line(img, (x1,y1),(x2,y2),(255,0,255),2)
+            if(x1 > (w - (3.5*y1) - 1200) and (x1 < w - (1*y1) - 800) and
+               x2 > (w - (3.5*y2) - 1200) and (x2 < w - (1*y2) - 800) and
+               x2 < w/2 + 50 and y2 > 100):
+                if y1 > minY or (y1 == minY and x1 > minX):
+                    minY = y1
+                    minX = x1
+                if y2 > minY or (y2 == minY and x2 > minX):
+                    minY = y2
+                    minX = x2
+                if x1 > maxX:
+                    maxY = y1
+                    maxX = x1
+                if x2 > maxX:
+                    maxY = y2
+                    maxX = x2
+                #cv2.line(img, (x1,y1),(x2,y2),(255,0,255),2)
             line_count += 1
-        #cv2.line(img, (minX,minY),(maxX,maxY),(0,255,0),2)
-        slopedX1 = int(len(img[0])/2); slopedY1 = len(img)
-        #slopedX2 = len(img); slopedY2 =  int(avg_slope*slopedX2)
-        slopedX2, slopedY2 = calc_points(slopedX1, slopedY1, avg_slope)
-        print(avg_slope)
-        print(len(img), len(img[0]))
-        print([slopedX1, slopedY1, slopedX2, slopedY2])
-        #boo, (slopedX1, slopedY1), (slopedX2, slopedY2) = \
-        #cv2.clipLine((0, 0, len(img), len(img[0])), (slopedX1, slopedY1), (slopedX2, slopedY2))
-        cv2.line(img, (slopedX1, slopedY1), 
-            (slopedX2, slopedY2), (255,0,255),2)
-        #print(cv2.clipLine((0, 0, len(img[0]), len(img)), (slopedX1, slopedY1), (slopedX2, slopedY2)))
-        print([slopedX1, slopedY1, slopedX2, slopedY2])
+        cv2.line(img, (minX,minY),(maxX,maxY),(0,255,0),2)
+        slopeY = (maxY-minY)
+        slopeX = (maxX-minX)
+        slope = slopeY/slopeX
+        #cv2.line(img, (w//2,h),(int((w//2) - slopeX),int (h - slopeY)),(0,0,255),2)
+        lineX2 = w//2
+        if slope != 0 and not math.isnan(slope):
+            lineX2 = int((minX - minY/slope))
+        cv2.line(img, (w//2,h),(lineX2,0),(0,0,255),2)
+        value = (lineX2 - w/2)/w
+        print(value)
 
     return img
