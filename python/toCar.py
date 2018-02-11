@@ -2,19 +2,22 @@
 import cv2
 import matplotlib
 import pyCV2
+import time
 import sys
 import configparser
-from matplotlib.pyplot import imshow
-from matplotlib import pyplot as plt
-import matplotlib.animation as animation
-
+from picamera.array import PiRGBArray
+from picamera import PiCamera
 
 def main(argv):
     config = []
     if len(argv) > 1:
         config = configparser.ConfigParser()
         config.read(argv[1])
-    cap = cv2.VideoCapture('../images/GP015331.MP4')
+    camera = PiCamera()
+    capture = PiRGBArray(camera, size = (640, 480))
+    time.sleep(.1)
+
+    #cap = cv2.VideoCapture('../images/GP015331.MP4')
     def updatefig(*args):
         ret, frame = cap.read()
         angle = 0
@@ -31,9 +34,11 @@ def main(argv):
                                     config['OPTIONS']['theta'])
         return angle
 
-    while(True):
-        angle = updatefig()
+    for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
+        image = frame.array
+        angle = pyCV2.line_image(image)
         print("ANGLE GIVEN: " , angle)
+        rawCapture.truncate(0)
 
 
 if __name__ == "__main__":

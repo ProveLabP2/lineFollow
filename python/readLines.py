@@ -34,9 +34,9 @@ def main(argv):
                                     config['OPTIONS']['theta'])
         im.set_array(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
         return im
-    while(True):
-        updatefig()
-    #ani = animation.FuncAnimation(fig, updatefig, interval=1)
+    #while(True):
+        #updatefig()
+    ani = animation.FuncAnimation(fig, updatefig, interval=1)
     plt.show()
 
 if __name__ == "__main__":

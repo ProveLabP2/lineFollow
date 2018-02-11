@@ -4,12 +4,6 @@ import numpy as np
 import random
 import math
 
-import matplotlib
-from matplotlib.pyplot import imshow
-from matplotlib import pyplot as plt
-#%matplotlib inline
-
-
 def calc_points(x1, y1, slope):
     if slope == 0:
         return x1, 0
