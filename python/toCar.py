@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 import cv2
 import matplotlib
-import pyCV
+import pyCV2
 import sys
 import configparser
 from matplotlib.pyplot import imshow
@@ -15,16 +15,13 @@ def main(argv):
         config = configparser.ConfigParser()
         config.read(argv[1])
     cap = cv2.VideoCapture('../images/GP015331.MP4')
-    ret, frame = cap.read()
-    fig = plt.figure()
-    ax = fig.add_subplot(111)
-    im = ax.imshow(cv2.cvtColor(frame[582:, :], cv2.COLOR_BGR2RGB), animated=True)
     def updatefig(*args):
         ret, frame = cap.read()
+        angle = 0
         if len(argv) == 1:
-            frame = pyCV.line_image(frame)
+            angle = pyCV2.line_image(frame)
         else:
-            frame = pyCV.line_image(frame,
+            angle = pyCV2.line_image(frame,
                                     config['OPTIONS']['canny_threshold1'],
                                     config['OPTIONS']['canny_threshold2'],
                                     config['OPTIONS']['hough_threshold'],
@@ -32,12 +29,12 @@ def main(argv):
                                     config['OPTIONS']['max_gap'],
                                     config['OPTIONS']['rho'],
                                     config['OPTIONS']['theta'])
-        im.set_array(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
-        return im
+        return angle
+
     while(True):
-        updatefig()
-    #ani = animation.FuncAnimation(fig, updatefig, interval=1)
-    plt.show()
+        angle = updatefig()
+        print("ANGLE GIVEN: " , angle)
+
 
 if __name__ == "__main__":
     main(sys.argv)
