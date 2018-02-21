@@ -1,8 +1,8 @@
 #!/usr/bin/python3
 import cv2
 import matplotlib
-import pyCV
-import sys
+import pyCV2
+import sys;
 import configparser
 from matplotlib.pyplot import imshow
 from matplotlib import pyplot as plt
@@ -14,17 +14,17 @@ def main(argv):
     if len(argv) > 1:
         config = configparser.ConfigParser()
         config.read(argv[1])
-    cap = cv2.VideoCapture('../images/GP015331.MP4')
+    cap = cv2.VideoCapture('../images/20180220_152855.mp4')
     ret, frame = cap.read()
     fig = plt.figure()
     ax = fig.add_subplot(111)
-    im = ax.imshow(cv2.cvtColor(frame[582:, :], cv2.COLOR_BGR2RGB), animated=True)
+    im = ax.imshow(cv2.cvtColor(frame[:, 100:-100], cv2.COLOR_BGR2RGB), animated=True)
     def updatefig(*args):
         ret, frame = cap.read()
         if len(argv) == 1:
-            frame = pyCV.line_image(frame)
+            frame = pyCV2.line_image(frame)
         else:
-            frame = pyCV.line_image(frame,
+            frame = pyCV2.line_image(frame,
                                     config['OPTIONS']['canny_threshold1'],
                                     config['OPTIONS']['canny_threshold2'],
                                     config['OPTIONS']['hough_threshold'],
