@@ -18,11 +18,13 @@ def line_image(image, canny_threshold1=0, canny_threshold2=0,
     img = np.array(image[582:, :])
     hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
 
-    lower_yellow = np.array([0, 100, 100])
-    upper_yellow = np.array([70, 255, 255])
+    #lower_yellow = np.array([0, 100, 100])
+    #upper_yellow = np.array([70, 255, 255])
+    lower_blue = np.array([100, 0, 0])
+    upper_blue = np.array([255, 70, 70])
     #upper_yellow = np.array([70, 100, 100])
 
-    mask = cv2.inRange(hsv, lower_yellow, upper_yellow)
+    mask = cv2.inRange(hsv, lower_blue, upper_blue)
     res = cv2.bitwise_and(img, img, mask=mask)
     gray_arr = np.array(cv2.cvtColor(res, cv2.COLOR_BGR2GRAY))
 
