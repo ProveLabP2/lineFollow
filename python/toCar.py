@@ -10,10 +10,10 @@ from picamera.array import PiRGBArray
 from picamera import PiCamera
 
 def main(argv):
-    #ser = serial.Serial(
-    #    port='/dev/ttyACM0',
-    #    baudrate=9600
-    #)
+    ser = serial.Serial(
+        port='/dev/ttyACM0',
+        baudrate=9600
+    )
     config = []
     if len(argv) > 1:
         config = configparser.ConfigParser()
@@ -44,7 +44,7 @@ def main(argv):
         angle = pyCV2.line_image(image)
         angle += 1
         print("ANGLE GIVEN: " , angle)
-        #ser.write(str(angle).encode())
+        ser.write(str(angle).encode())
         print("ANGLE SENT")
         rawCapture.truncate(0)
 
