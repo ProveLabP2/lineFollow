@@ -22,7 +22,7 @@ def main(argv):
     time.sleep(.1)
     #cap = cv2.VideoCapture('../images/GP015331.MP4')
     def updatefig(*args):
-        ret, frame = cap.read()
+        ret, frame = rawCapture.read()
         angle = 0
         if len(argv) == 1:
             angle = pyCV2.line_image(frame)
