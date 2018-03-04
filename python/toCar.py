@@ -1,6 +1,5 @@
 #!/usr/bin/python3
 import cv2
-import matplotlib
 import pyCV2
 import time
 import sys
@@ -11,7 +10,7 @@ from picamera import PiCamera
 
 def main(argv):
     ser = serial.Serial(
-        port='/dev/ttyACM0',
+        port='/dev/ttyUSB0',
         baudrate=9600
     )
     config = []
@@ -21,7 +20,6 @@ def main(argv):
     camera = PiCamera()
     rawCapture = PiRGBArray(camera, size = (1920, 1080))
     time.sleep(.1)
-
     #cap = cv2.VideoCapture('../images/GP015331.MP4')
     def updatefig(*args):
         ret, frame = cap.read()
@@ -47,7 +45,6 @@ def main(argv):
         ser.write(str(angle).encode())
         print("ANGLE SENT")
         rawCapture.truncate(0)
-
 
 if __name__ == "__main__":
     main(sys.argv)
