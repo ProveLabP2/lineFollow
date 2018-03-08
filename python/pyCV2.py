@@ -16,18 +16,20 @@ def line_image(image, canny_threshold1=80, canny_threshold2=150,
 
     #Read images, flip them vertically, and convert them to RGB color order
     img = np.array(image[:, :])
-    scale = .25
+    scale = .5
     new_img = cv2.resize(img, None, fx=scale, fy=scale, interpolation=cv2.INTER_LINEAR) 
     hsv = cv2.cvtColor(new_img, cv2.COLOR_BGR2HSV)
 
-    #lower_yellow = np.array([0, 100, 100])
-    #upper_yellow = np.array([70, 255, 255])
+    lower_yellow = np.array([0, 100, 100])
+    upper_yellow = np.array([70, 255, 255])
     lower_blue = np.array([100, 0, 0])
-    upper_blue = np.array([255, 70, 70])
+    upper_blue = np.array([110, 255, 255])
+    #return new_img
 
     mask = cv2.inRange(hsv, lower_blue, upper_blue)
-    res = cv2.bitwise_and(img, img, mask=mask)
+    res = cv2.bitwise_and(new_img, new_img, mask=mask)
     gray_arr = np.array(cv2.cvtColor(res, cv2.COLOR_BGR2GRAY))
+    #return res
 
     #blur images to avoid recognizing small lines
     blur_arr = np.array(cv2.blur(gray_arr,(1,5)))
@@ -38,7 +40,7 @@ def line_image(image, canny_threshold1=80, canny_threshold2=150,
     #---- apply automatic Canny edge detection using the computed median----
     lower = int(max(0, (1.0 - sigma) * v))
     upper = int(min(255, (1.0 + sigma) * v))
-    print(lower, '   ', upper)
+    #print(lower, '   ', upper)
 
     #canny_arr = np.array(cv2.Canny(blur_arr, canny_threshold1, canny_threshold2))
     canny_arr = np.array(cv2.Canny(blur_arr, 100, 150))
@@ -102,4 +104,4 @@ def line_image(image, canny_threshold1=80, canny_threshold2=150,
         value = 1
     elif value < -1:
         value =  -1
-    return value + 1
+    return value

@@ -14,7 +14,9 @@ def main(argv):
     if len(argv) > 1:
         config = configparser.ConfigParser()
         config.read(argv[1])
-    cap = cv2.VideoCapture('../images/20180220_152855.mp4')
+    #cap = cv2.VideoCapture('../images/20180220_152855.mp4')
+    #cap = cv2.VideoCapture('../images/GP015331.MP4')
+    cap = cv2.VideoCapture(0)
     ret, frame = cap.read()
     fig = plt.figure()
     ax = fig.add_subplot(111)
@@ -33,6 +35,7 @@ def main(argv):
                                     config['OPTIONS']['rho'],
                                     config['OPTIONS']['theta'])
         im.set_array(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
+        #im.set_array(frame)
         return im
     #while(True):
         #updatefig()
