@@ -26,7 +26,7 @@ def line_image(image, canny_threshold1=80, canny_threshold2=150,
     upper_blue = np.array([255, 70, 70])
 
     mask = cv2.inRange(hsv, lower_blue, upper_blue)
-    res = cv2.bitwise_and(img, img, mask=mask)
+    res = cv2.bitwise_and(new_img, new_img, mask=mask)
     gray_arr = np.array(cv2.cvtColor(res, cv2.COLOR_BGR2GRAY))
 
     #blur images to avoid recognizing small lines
@@ -102,4 +102,4 @@ def line_image(image, canny_threshold1=80, canny_threshold2=150,
         value = 1
     elif value < -1:
         value =  -1
-    return value + 1
+    return value
