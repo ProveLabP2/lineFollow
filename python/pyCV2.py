@@ -22,8 +22,10 @@ def line_image(image, canny_threshold1=80, canny_threshold2=150,
 
     lower_yellow = np.array([0, 100, 100])
     upper_yellow = np.array([70, 255, 255])
-    lower_blue = np.array([100, 0, 0])
-    upper_blue = np.array([110, 255, 255])
+    lower_blue = np.array([90, 0, 0])
+    upper_blue = np.array([120, 255, 150])
+    lower_green = np.array([50, 0, 0])
+    upper_green = np.array([80, 255, 100])
     #return new_img
 
     mask = cv2.inRange(hsv, lower_blue, upper_blue)

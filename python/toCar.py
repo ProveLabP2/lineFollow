@@ -39,9 +39,12 @@ def main(argv):
         return angle
 
     print("___");
+    count = 0;
     for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
         print("---");
+        count += 1;
         image = frame.array
+        cv2.imwrite('piImg' + count + '.png');
         angle = pyCV2.line_image(image)
         print("___");
         angle += 1
