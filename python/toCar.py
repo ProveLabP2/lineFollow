@@ -1,22 +1,29 @@
 #!/usr/bin/python3
 import cv2
-import matplotlib
 import pyCV2
+import time
 import sys
 import configparser
-from matplotlib.pyplot import imshow
-from matplotlib import pyplot as plt
-import matplotlib.animation as animation
-
+import serial
+from picamera.array import PiRGBArray
+from picamera import PiCamera
 
 def main(argv):
+   # ser = serial.Serial(
+   #     port='/dev/ttyUSB0',
+   #     baudrate=9600
+   # )
     config = []
     if len(argv) > 1:
         config = configparser.ConfigParser()
         config.read(argv[1])
-    cap = cv2.VideoCapture('../images/GP015331.MP4')
+    camera = PiCamera()
+    camera.resolution=(1920, 1088)
+    rawCapture = PiRGBArray(camera, size = (1920, 1088))
+    time.sleep(.1)
+    #cap = cv2.VideoCapture('../images/GP015331.MP4')
     def updatefig(*args):
-        ret, frame = cap.read()
+        ret, frame = rawCapture.read()
         angle = 0
         if len(argv) == 1:
             angle = pyCV2.line_image(frame)
@@ -31,10 +38,20 @@ def main(argv):
                                     config['OPTIONS']['theta'])
         return angle
 
-    while(True):
-        angle = updatefig()
+    print("___");
+    count = 0;
+    for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
+        print("---");
+        count += 1;
+        image = frame.array
+        cv2.imwrite('piImg' + count + '.png');
+        angle = pyCV2.line_image(image)
+        print("___");
+        angle += 1
         print("ANGLE GIVEN: " , angle)
-
+        #ser.write(str(angle).encode())
+        print("ANGLE SENT")
+        rawCapture.truncate(0)
 
 if __name__ == "__main__":
     main(sys.argv)
