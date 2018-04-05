@@ -17,8 +17,8 @@ def line_image(image, canny_threshold1=80, canny_threshold2=150,
     #Read images, flip them vertically, and convert them to RGB color order
     img = np.array(image[:, :])
     scale = .5
-    new_img = cv2.resize(img, None, fx=scale, fy=scale, interpolation=cv2.INTER_LINEAR) 
-    hsv = cv2.cvtColor(new_img, cv2.COLOR_BGR2HSV)
+    img = cv2.resize(img, None, fx=scale, fy=scale, interpolation=cv2.INTER_LINEAR) 
+    hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
 
     lower_yellow = np.array([0, 100, 100])
     upper_yellow = np.array([70, 255, 255])
@@ -26,10 +26,10 @@ def line_image(image, canny_threshold1=80, canny_threshold2=150,
     upper_blue = np.array([120, 255, 150])
     lower_green = np.array([50, 0, 0])
     upper_green = np.array([80, 255, 100])
-    #return new_img
+    #return img
 
     mask = cv2.inRange(hsv, lower_blue, upper_blue)
-    res = cv2.bitwise_and(new_img, new_img, mask=mask)
+    res = cv2.bitwise_and(img, img, mask=mask)
     gray_arr = np.array(cv2.cvtColor(res, cv2.COLOR_BGR2GRAY))
     #return res
 
@@ -75,14 +75,14 @@ def line_image(image, canny_threshold1=80, canny_threshold2=150,
                 maxY = y2
                 maxX = x2
             line_count += 1
-            #cv2.line(img, (int(x1/scale), int(y1/scale)), (int(x2/scale), int(y2/scale)), (0, 0, 255), 5)
-        maxX = int(maxX/scale)
-        minX = int(minX/scale)
-        maxY = int(maxY/scale)
-        minY = int(minY/scale)
+            cv2.line(img, (int(x1), int(y1)), (int(x2), int(y2)), (0, 0, 255), 5)
+        maxX = int(maxX)
+        minX = int(minX)
+        maxY = int(maxY)
+        minY = int(minY)
         slopeY = (maxY-minY)
         slopeX = (maxX-minX)
-        #cv2.line(img, (maxX, maxY), (minX, minY), (0, 255, 0), 5)
+        cv2.line(img, (maxX, maxY), (minX, minY), (0, 255, 0), 5)
         if slopeX == 0:
             botIntercept = maxX
             topIntercept = maxX
@@ -95,7 +95,8 @@ def line_image(image, canny_threshold1=80, canny_threshold2=150,
                 botIntercept = (h - yInt)/slope
             else:
                 value = 0
-        #cv2.line(img, (int(topIntercept), 0), (int(botIntercept), h), (255, 0, 0), 3)
+        cv2.line(img, (int(topIntercept), 0), (int(botIntercept), h), (255, 0, 0), 3)
+    return img
     botDiff = botIntercept - w//2
     topDiff = topIntercept - w//2
     if abs(botDiff) > .10*w:

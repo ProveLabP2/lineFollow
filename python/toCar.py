@@ -44,13 +44,21 @@ def main(argv):
         print("---");
         count += 1;
         image = frame.array
-        cv2.imwrite('piImg' + count + '.png');
+        image = cv2.flip(image, 0)
+        #image = pyCV2.line_image(image)
+        if count == 10:
+            cv2.imwrite('piImg.png', image);
+            count = 0
+            print("Saving image...")
         angle = pyCV2.line_image(image)
         print("___");
         angle += 1
-        angle = angle*255/2
-        angle = bytearray([int(angle)])
         print("ANGLE GIVEN: " , angle)
+        if angle == 0:
+            angle = 1
+        else:
+            angle = min(max(float(angle)*255/2.0, 0), 255)
+        angle = bytearray([int(angle)])
         ser.write(angle)
         print("ANGLE SENT")
         rawCapture.truncate(0)
