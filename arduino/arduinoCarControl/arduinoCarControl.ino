@@ -10,26 +10,33 @@ void setup() {
   
   pinMode(rPiEnable, INPUT);
 
-  Serial.begin(9600);
+  Serial.begin(115200);
 }
 
 // the loop function runs over and over again forever
 float incomingData = 0.0;
 
 void loop() {
-  if (digitalRead(rPiEnable) == HIGH){
-  if(Serial.available()){
-    incomingData = Serial.parseFloat();
-    if(incomingData < 1){
-      analogWrite(leftPinENA, 255);
-      analogWrite(rightPinENA, (incomingData)*255);
-    }else if (incomingData > 1){
-      analogWrite(leftPinENA, (2-incomingData)*255);
-      analogWrite(rightPinENA, 255);
-    }else if (incomingData == 1){
-      analogWrite(leftPinENA, 255);
-      analogWrite(rightPinENA, 255);
+  while(Serial.available()){
+    byte b1 = Serial.read();
+    int val = b1;
+    Serial.println(val);
+    if (digitalRead(rPiEnable) == HIGH){
+      incomingData = val;
+      if(incomingData == 0){
+        return;
+      }
+      Serial.println(incomingData);
+      if(incomingData < 255/2){
+        analogWrite(leftPinENA, 255);
+        analogWrite(rightPinENA, (incomingData-1)*255);
+      }else if (incomingData > 255/2){
+        analogWrite(leftPinENA, (255-incomingData)*255);
+        analogWrite(rightPinENA, 255);
+      }else if (incomingData == 255/2){
+        analogWrite(leftPinENA, 255);
+        analogWrite(rightPinENA, 255);
+      }
     }
   }
-  }`
 }
