@@ -1,14 +1,14 @@
 #include <SoftwareSerial.h>
 
-SoftwareSerial mySerial(2, 3); //RX, TX
+SoftwareSerial mySerial(4, 5); //RX, TX
 
 void setup() {
   Serial.begin(9600);
   mySerial.begin(9600);
 }
 
+
 void loop() {
-  
   
   if(Serial.available() > 0){//Read from serial monitor and send over HC-12
     Serial.println("Sending: "); 
