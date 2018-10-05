@@ -1,4 +1,4 @@
-import cv2
+import cv2, time
 
 def get_camera_capture():
     '''
@@ -24,20 +24,34 @@ def create_window(window_name):
 
     cv2.namedWindow(window_name)
 
-def display_to_window(window_name, camera):
+def display_to_window(window_name, capture):
     '''
         Reads in a single frame from camera and displays 
         to the specified window with given window name.
     '''
 
-    ret, frame = camera.read()
+    ret, frame = capture.read()
     cv2.imshow(window_name, frame)
 
-def end_program():
+def end_program(list_of_captures):
     '''
         Pretty self-explanatory.
     '''
-
-    cam.release()
+    [capture.release() for capture in list_of_captures]
     cv2.destroyAllWindows()
 
+
+'''
+Sample code:
+
+create_window("window_name")
+capture = get_camera_capture()
+
+while True:
+    k = cv2.waitKey(1)
+    if k==27:
+        break
+    display_to_window("window_name", capture)
+
+end_program([capture])
+'''
